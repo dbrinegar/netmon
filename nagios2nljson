@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# turn a nagios plugin run like
+# "OK network reachable to 192.168.254.1"
+# into new line separated json like
+# {"status":"1", "time":"1419536661", "msg":"OK network reachable to 192.168.254.1","cmd":"testnet 192.168.254.1"}
+
+time=`date +%s`
+cmd="${@}"
+msg=`${cmd}`
+status=$?
+
+function printkv() {
+  printf "'$1':"
+  shift
+  printf "'$*'"
+}
+
+printf "{"
+printkv status $status
+printf ", "
+printkv time $time
+printf ", "
+printkv msg $msg
+printf ", "
+printkv cmd $cmd
+printf "}\n"
