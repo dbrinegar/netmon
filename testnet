@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# ping -o means return success on first good ping
+# ping -c 3 means ping at most three times
+net=${1:-localhost}
+if ping -oc 3 ${net} 2>/dev/null >/dev/null
+then
+  echo "OK network reachable to ${net}"
+  exit 0
+else
+  echo "FAIL network not reachable to ${net}"
+  exit 2
+fi
+

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# ntpq prints a table with an annotation in the first column
+# * means this server is preferred, so we read that offset
+# " " space means not enough data to have an opinion, so
+# in that case we take the first offset in the table
+# the [^ ] second character not a space skips the table header
+host=${1:-localhost}
+msg=`ntpq -p ${host} 2>/dev/null | awk '$0 ~ /^[* ][^ ]/ {
+  if ($9 !~ /^[-+0-9.]+$/) {
+    print "FAIL cannot find time sync offset";
+    exit 2;
+  }
+  if ($9 < -1000 || $9 > 1000) {
+    print "FAIL time out of sync", $9;
+    exit 2;
+  }
+  print "OK time in sync", $9;
+  exit 0;
+  }'`
+status=$?
+
+if [ -z "${msg}" ]
+then
+  msg="FAIL cannot find time service"
+  status=2
+fi
+
+echo "${msg} on ${host}"
+exit ${status}

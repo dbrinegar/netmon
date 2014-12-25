@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# dig will do 3 tries and wait 5 seconds, by default
+# to change this, look at +tries and +time
+
+dns=${1:-localhost}
+ips=`dig google.com @${dns} +short +tries=3 +time=3`
+ok=$?
+if [ $ok -eq 0 -a -n "$ips" ]
+then
+  echo "OK dns working on ${dns}"
+  exit 0
+else
+  echo "FAIL dns not working on ${dns}"
+  exit 2
+fi
