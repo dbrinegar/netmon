@@ -3,8 +3,8 @@ netmon
 
 OSX network testing utils for diagnosing what has gone wrong from a Mac.
 
-Workers are like Nagios plugins  http://nagios.sourceforge.net/docs/nagioscore/4/en/pluginapi.html  in that they
-do one simple test, print a message, and exit 2 for failure, or 0 for success
+Workers are like [Nagios plugins](http://nagios.sourceforge.net/docs/nagioscore/4/en/pluginapi.html)
+in that they do one simple test, print a message, and exit 2 for failure, or 0 for success
 
 * testnet
 * testdns
