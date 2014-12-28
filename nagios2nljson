@@ -7,7 +7,7 @@
 
 time=`date +%s`
 cmd="${@}"
-msg=`${cmd}`
+msg=`"${@}"`
 status=$?
 
 function printkv() {
