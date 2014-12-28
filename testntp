@@ -6,16 +6,25 @@
 # in that case we take the first offset in the table
 # the [^ ] second character not a space skips the table header
 host=${1:-localhost}
-msg=`ntpq -p ${host} 2>/dev/null | awk '$0 ~ /^[* ][^ ]/ {
-  if ($9 !~ /^[-+0-9.]+$/) {
+msg=`ntpq -p ${host} 2>/dev/null | awk '
+  $0 ~ /^ [^ ]/ {
+    if (!T) {
+      T=$9;
+    }
+  }
+  $0 ~ /^[*]/ {
+    T=$9
+  }
+  END {
+  if (T !~ /^[-+0-9.]+$/) {
     print "FAIL cannot find time sync offset";
     exit 2;
   }
-  if ($9 < -1000 || $9 > 1000) {
-    print "FAIL time out of sync", $9;
+  if (T < -1000 || T > 1000) {
+    print "FAIL time out of sync", T;
     exit 2;
   }
-  print "OK time in sync", $9;
+  print "OK time in sync", T;
   exit 0;
   }'`
 status=$?
