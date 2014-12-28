@@ -5,10 +5,10 @@
 net=${1:-localhost}
 if ping -oc 3 ${net} 2>/dev/null >/dev/null
 then
-  echo "OK network reachable to ${net}"
+  echo "OK network can reach ${net}"
   exit 0
 else
-  echo "FAIL network not reachable to ${net}"
+  echo "FAIL network cannot reach ${net}"
   exit 2
 fi
 
