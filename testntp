@@ -3,17 +3,20 @@
 # ntpq prints a table with an annotation in the first column
 # * means this server is preferred, so we read that offset
 # " " space means not enough data to have an opinion, so
-# in that case we take the first offset in the table
+# in that case we take the offset with the most reach
 # the [^ ] second character not a space skips the table header
 host=${1:-localhost}
 msg=`ntpq -p ${host} 2>/dev/null | awk '
   $0 ~ /^ [^ ]/ {
-    if (!T) {
+    if ($7 > R) {
+      R=$7;
       T=$9;
     }
   }
   $0 ~ /^[*]/ {
-    T=$9
+    STAR=1;
+    R=1e99;
+    T=$9;
   }
   END {
   if (T !~ /^[-+0-9.]+$/) {
@@ -23,6 +26,10 @@ msg=`ntpq -p ${host} 2>/dev/null | awk '
   if (T < -1000 || T > 1000) {
     print "FAIL time out of sync", T;
     exit 2;
+  }
+  if (!STAR) {
+    print "WARN no time sync peer yet", T;
+    exit 1;
   }
   print "OK time in sync", T;
   exit 0;
