@@ -30,7 +30,7 @@ googledns="8.8.8.8"
 
 if [ -z "$gateway" ]
 then
-  $F sh -c 'echo "FAIL no local network" ; exit 2'
+  $F sh -c "echo 'FAIL no local network' ; exit 2"
   exit 2
 fi
 
